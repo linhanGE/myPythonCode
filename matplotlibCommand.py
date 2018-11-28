@@ -1,4 +1,6 @@
+#####################################
 #-----------import modules----------#
+#####################################
 
 import numpy as np
 # controal plot behaviour
@@ -7,7 +9,9 @@ import matplotlib.mlab as mlab
 # control the tick
 import matplotlib.ticker as ticker                                  
 
+################################
 #----------rc setting----------#
+################################
 
 # global setting for journal paper
 params = {
@@ -17,18 +21,21 @@ params = {
    'xtick.labelsize': 11,
    'ytick.labelsize': 11,
    'figure.figsize': [3.54, 3.5]
+   #'mathtext.fontset': 'cm'     # different font for epsilon
 #   'axes.linewidth': 1,
 #   'patch.linewidth': 1
    }
 # update parameters
 plt.rcParams.update(params)                                        
 
+##########################
 #----------plot----------#
+##########################
 
 # 2 represents 2 figures, sharex means share the x axis
 fig, axs = plt.subplots(3,sharex=True, sharey=True)                            
 # plot line
-ax.plot(t2,h2,color='#d95f02',linstyle=':',label = 'xyz')                                
+ax.plot(t2,h2,color='#d95f02',linestyle=':', linewidth=7.0, label = 'xyz')                                
 # plot scatter
 ax.scatter(x,y,s = 10, c = '#d95f02', marker = 'o',label = 'CFD-DEM')                    
 # turn on or off the grid
@@ -38,14 +45,17 @@ ax.axhline(y=0.81, color='k',lw = 1,ls = '--' )
 # plot with error bar
 ax.errorbar(simulation[:,0],meangp,stdgp,linestyle='None',color = '#1b9e77', capsize=2,fmt = 'x',label = 'CFD-DEM') 
                           
-
+###########################
 #----------Title----------#
+###########################
 
 # set title font
 Arialfont = {'fontname':'Arial'}                                    
 ax.set_title('Cd vs Time',**Arialfont)                              
 
+###########################################
 #----------axis and tick control----------#
+###########################################
 
 axs[1].tick_params(bottom='off')
 
@@ -74,13 +84,21 @@ ax.set_xlim([0., 1])
 # x,y axis start from same position
 plt.margins(0)                                                       
  # move x-axis where y=0
-pos1 = ax.spines['bottom'].set_position('zero')                     
+pos1 = ax.spines['bottom'].set_position('zero') or
+plt.margins(0)                    
 # To shift the tick labels relative to the ticks use pad
 ax.tick_params(which='both', direction='out', pad=5)  
 # set log scale
 ax.set_yscale('log')
+# turn off minor ticks
+plt.minorticks_off()
+plt.xscale('log', subsx=[2, 3, 4, 5, 6, 7, 8, 9])
+ax.minorticks_off()
 
+############################
 #----------marker----------#
+############################
+
 # ================    ===============================
 # character           description
 # ================    ===============================
@@ -113,7 +131,11 @@ ax.set_yscale('log')
 # ================    ===============================          
 # plot empty marker
 plt.scatter(data[:,0],data[:,1], s=14, facecolors='none', edgecolors='b', marker = 'o',label = 'simulation')
+ax.plot(zenit_small[:,0], zenit_small[:,1], 'o', markersize=8, markeredgewidth=1 ,markeredgecolor='k', markerfacecolor='None',label = 'Zenit et al. 1997')
+
+##########################
 #----------text----------#
+##########################
 
 # add text to a point
 ax[0].text(0.001,2,'xyz')   # data coordinate
@@ -123,7 +145,15 @@ fig.text(0.01, 0.98, "A", weight="bold", horizontalalignment='left', verticalali
 
 ax.annotate("Re = %s, Cd = %s"%(str(round(Re)),str(round(abs(meanCd),3))),(0.41,0.36),xycoords='figure fraction')
 
+# add text based on coordinates relative to the axis https://matplotlib.org/users/text_props.html
+ax.text(0.2, 0.8,r'$\epsilon_{scrit}$'+'={:.2f}'.format(ec),
+     horizontalalignment='center',
+     verticalalignment='center',
+     transform = ax.transAxes)
+
+############################
 #----------legend----------#
+############################
 
 # show legend, this one should not coexit with next one
 plt.legend(loc = 1)              
@@ -155,10 +185,21 @@ leg.get_frame().set_linewidth(1)
 plt.legend(frameon=False)
 ax.legend(loc = 3,bbox_to_anchor=(0,0),frameon=False,borderaxespad=None,mode='expand')
 
+##################
+#---draw lines---#
+##################
+
+ax.axvline(x=maxgp,ymin=0,ymax=0.8,ls = 'dotted', c='b')
+
+#################################################
 #----------save figure with resolution----------#
+#################################################
+
 fig.savefig('xyz.tiff',bbox_inches='tight',dpi = 600)                              
 
+#################################
 #---------special cases---------#
+#################################
  
 # plot histgram figure
 fig,ax = plt.subplots()
