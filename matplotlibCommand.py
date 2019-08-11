@@ -33,7 +33,7 @@ plt.rcParams.update(params)
 ##########################
 
 # 2 represents 2 figures, sharex means share the x axis
-fig, axs = plt.subplots(3,sharex=True, sharey=True)                            
+fig, axs = plt.subplots(3,sharex=True, sharey=True,figsize=(10,8))                            
 # plot line
 ax.plot(t2,h2,color='#d95f02',linestyle=':', linewidth=7.0, label = 'xyz')                                
 # plot scatter
